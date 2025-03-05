@@ -12,7 +12,7 @@ const Project = () => {
     useEffect(function(){
         const socket = socketConnection(projectId)
         socket.on("receiveMessage", function(msg){
-            setAllMessages(prev => [...prev,{msg}])
+            setAllMessages(prev => [...prev,msg])
         })
     },[])
 
@@ -31,7 +31,10 @@ const Project = () => {
                 <div className='w-full max-h-[90%] overflow-y-scroll p-4'>
                     {
                         allMessages.map((data)=>(
-                            <div className='w-fit px-4 py-2 mb-2 bg-gray-300 rounded-md'>{data.msg}</div>
+                            <div className="chat chat-start">
+                                <div className="chat-header">{data.username}</div>
+                                <div className="chat-bubble bg-white">{data.msg}</div>
+                            </div>
                         ))
                     }
                 </div>
