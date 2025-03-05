@@ -27,21 +27,21 @@ const Project = () => {
   return (
     <main className='w-full h-full '>
         <section className='w-full h-full flex gap-8 px-10 py-4'>
-            <div className='basis-[25%] bg-red-300 rounded-md relative '>
-                <div className='w-full h-full overflow-y-scroll p-4'>
+            <div className='basis-[25%] bg-gray-200 rounded-md relative '>
+                <div className='w-full max-h-[90%] overflow-y-scroll p-4'>
                     {
                         allMessages.map((data)=>(
                             <div className='w-fit px-4 py-2 mb-2 bg-gray-300 rounded-md'>{data.msg}</div>
                         ))
                     }
                 </div>
-                <form onSubmit={handleSubmit} className='w-full absolute bottom-0 left-0 flex gap-4 px-2 py-1'>
-                    <input value={currentMessage} onChange={(e)=> setCurrentMessage(e.target.value)} className='border border-gray-400 px-4 py-2 basis-[75%] rounded' type="text" placeholder='Enter message' />
-                    <button className='cursor-pointer px-4 py-2 bg-blue-300 basis-[25%] rounded'>Send</button>
+                <form onSubmit={handleSubmit} className='w-full absolute bottom-0 left-0 flex gap-4 px-2 py-1 bg-gray-300'>
+                    <input value={currentMessage} onChange={(e)=> setCurrentMessage(e.target.value)} className='border bg-white border-gray-400 px-4 py-1 basis-[85%] rounded' type="text" placeholder='Enter message' />
+                    <button className='cursor-pointer px-2 py-1 bg-blue-400 basis-[15%] rounded'><i class="ri-send-plane-fill"></i></button>
                 </form>
             </div>
-            <div className='basis-[46%] bg-red-300 rounded-md'></div>
-            <div className='basis-[28%] bg-red-300 rounded-md'></div>
+            <div className='basis-[46%] bg-black rounded-md'></div>
+            <div className='basis-[28%] bg-black rounded-md'></div>
         </section>
     </main>
   )
