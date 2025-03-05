@@ -10,8 +10,10 @@ app.use(cors())
 
 const projectRoutes = require("./routes/project.routes")
 const userRoutes = require("./routes/user.routes")
+const messageRoutes = require("./routes/message.routes")
 
 app.use("/v1/api/projects", projectRoutes)
 app.use("/v1/api/users", userRoutes)
+app.use("/v1/api/messages", messageRoutes)
 
 module.exports = app

@@ -22,7 +22,8 @@ const connectSocket = (server) => {
         socket.on("message", async function(data){
             const message = await messageModel.create({
                 text: data,
-                projectId
+                projectId,
+                userId: user._id
             })
             console.log(message);
             socket.broadcast.to(projectId).emit("receiveMessage", {msg:data,username:user.username})

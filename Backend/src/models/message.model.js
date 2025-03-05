@@ -9,6 +9,10 @@ const messageSchema = new mongoose.Schema({
     projectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "project"
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
     }
 })
 
