@@ -1,7 +1,7 @@
 
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://0.0.0.0/code-reviewer")
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     console.log("db connected");
 })
