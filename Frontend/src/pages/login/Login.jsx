@@ -1,7 +1,8 @@
 
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../utils/Socket';
 
 const Login = () => {
     const [email,setEmail] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
     function handleSubmit(e){
         e.preventDefault();
 
-        axios.post("http://localhost:3000/v1/api/users/login",{email,password})
+        axios.post(BASE_URL + "/v1/api/users/login",{email,password})
         .then((res)=>{
             localStorage.setItem("token", res.data.token)
             navigate("/")
@@ -28,8 +29,8 @@ const Login = () => {
 
   return (
     <main className='w-full h-full '>
-        <section className='w-full h-full flex flex-col items-center justify-center'>
-            <form className='w-[350px] flex flex-col gap-6' onSubmit={handleSubmit} >
+        <section className='w-full h-full flex flex-col items-center justify-center bg-gray-200'>
+            <form className='md:w-[400px] w-[350px] flex flex-col gap-6 bg-white p-10 rounded-md' onSubmit={handleSubmit} >
                 <h2 className='text-center text-2xl'>Login Page</h2>
                 <input 
                     type="text" 
@@ -47,7 +48,8 @@ const Login = () => {
                     onChange={(e)=> setPassword(e.target.value)} 
                     required
                 />
-                <button className='px-4 py-2 bg-blue-500 rounded-md text-white'>Register</button>
+                <Link to="/register" className='font-semibold'>New User? <span className='text-blue-600'>Sign In</span></Link >
+                <button className='px-4 py-2 bg-blue-500 rounded-md text-white'>Login</button>
             </form>
             {error && <div className='font-semibold text-red-600 mt-4'>{error}</div> }
         </section>

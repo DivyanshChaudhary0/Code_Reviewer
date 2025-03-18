@@ -1,5 +1,6 @@
 
 const {body,validationResult} = require("express-validator")
+const jwt = require("jsonwebtoken")
 
 const registerValidation = [
     body("username")
@@ -48,8 +49,30 @@ const loginValidation = [
         }
 ]
 
+const authUser = async function(req,res,next){
+    try{
+        const token = req.headers?.authorization?.split(" ")[1];
+        if(!token){
+            return res.status(400).json({message: "Unauthorized"})
+        }
+
+        const decoded = jwt.verify(token,"huihui");
+        if(!decoded){
+            return res.status(400).json({message: "Unauthorized"})
+        }
+
+        req.user = decoded;
+        next();
+    }
+    catch(err){
+        res.status(401).json({
+            error: err.message
+        })
+    }
+}
 
 module.exports = {
     registerValidation,
-    loginValidation
+    loginValidation,
+    authUser
 }

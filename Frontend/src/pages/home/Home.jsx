@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../utils/Socket';
 
 const Home = () => {
 
@@ -13,7 +14,11 @@ const Home = () => {
     const navigate = useNavigate();
 
     function getProjects(){
-        axios.get("http://localhost:3000/v1/api/projects/list")
+        axios.get( BASE_URL + "/v1/api/projects/list",{
+            headers: {
+                Authorization: "bearer " + localStorage.getItem("token")
+            }
+        })
         .then((res)=>{
             setProjects(res.data.data)
             console.log(res);
@@ -29,7 +34,11 @@ const Home = () => {
 
     function handleSubmit(e){
         e.preventDefault();
-        axios.post("http://localhost:3000/v1/api/projects/create",{name:projectName})
+        axios.post( BASE_URL + "/v1/api/projects/create",{name:projectName},{
+            headers: {
+                Authorization: "bearer " + localStorage.getItem("token")
+            }
+        })
         .then((res)=>{
             getProjects();
             console.log(res);

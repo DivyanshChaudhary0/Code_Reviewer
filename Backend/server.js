@@ -8,6 +8,6 @@ const connectSocket = require("./src/services/socket.io")
 const server = createServer(app)
 connectSocket(server)
 
-server.listen(3000, function(){
-    console.log("app is running on port 3000");  
+server.listen(4000, function(){
+    console.log("app is running on port 4000");  
 })
