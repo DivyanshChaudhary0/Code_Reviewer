@@ -4,14 +4,23 @@ import { io } from "socket.io-client";
 export const BASE_URL = location.hostname === "localhost" ? "http://localhost:4000" : "http://3.110.28.69/api"
 
 const socketConnection = (projectId) => {
-    return io(BASE_URL, {
-        path: "/api/socket.io/",  // Correct WebSocket path
-        query: {
-            projectId,
-            token: localStorage.getItem("token"),
-        },
-        transports: ["websocket", "polling"], // Ensures WebSockets work properly
-    });
+    if(location.hostname === "localhost"){
+        return io("http://localhost:3000",{
+            query: {
+                projectId,
+                token: localStorage.getItem("token"),
+            },
+        });
+    }
+    else{
+        return io("/", {
+            path: "/api/socket.io",
+            query: {
+                projectId,
+                token: localStorage.getItem("token"),
+            },
+        })
+    }
 };
 
 export default socketConnection;
