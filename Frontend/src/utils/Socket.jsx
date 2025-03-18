@@ -1,7 +1,7 @@
 
 import { io } from "socket.io-client";
 
-export const BASE_URL = location.hostname === "localhost" ? "http://localhost:4000" : "http://3.110.28.69/api"
+export const BASE_URL = location.hostname === "localhost" ? "http://localhost:4000" : "http://3.110.28.69/app"
 
 const socketConnection = (projectId) => {
     if(location.hostname === "localhost"){
@@ -14,7 +14,7 @@ const socketConnection = (projectId) => {
     }
     else{
         return io("/", {
-            path: "/api/socket.io",
+            path: "/app/socket.io",
             query: {
                 projectId,
                 token: localStorage.getItem("token"),
