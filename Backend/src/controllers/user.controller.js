@@ -2,6 +2,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model");
+const messageModel = require("../models/message.model");
 
 
 const registerController = async function(req,res){
@@ -47,7 +48,7 @@ const loginController = async function(req,res){
     try{
         const {email,password} = req.body;
 
-        const user = await userModel.findOne({email})
+        const user = await userModel.findOne({email}).select("+password")
         if(!user){
             return res.status(401).json({message: "Invalid email or password"})
         }
@@ -63,6 +64,8 @@ const loginController = async function(req,res){
             email: user.email
         },"huihui",{expiresIn:"1d"})
 
+        delete user._doc.password
+
         res.status(200).json({
             user,
             token
@@ -76,8 +79,25 @@ const loginController = async function(req,res){
     }
 }
 
+const profileController = async function(req,res){
+    try{
+        const id = req.user._id;
+        const user = await userModel.findById(id);
+        res.status(200).json({
+            user
+        })
+    }
+    catch(err){
+        res.status(400).json({
+            error: err.message,
+            message: "Can not get profile"
+        })
+    }
+}
+
 
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    profileController
 }

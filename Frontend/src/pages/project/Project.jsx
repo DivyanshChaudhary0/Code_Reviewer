@@ -5,11 +5,11 @@ import socketConnection, { BASE_URL } from '../../utils/Socket';
 import axios from "axios"
 import EditablePrismEditor from '../../components/Prism';
 import ReactMarkdown from "react-markdown";
-import { ToastContainer, toast } from 'react-toastify';
 
 const Project = () => {
 
     const {projectId} = useParams();
+    const [socket,setSocket] = useState(null);
     const [currentMessage,setCurrentMessage] = useState("");
     const [allMessages,setAllMessages] = useState([])
 
@@ -17,28 +17,20 @@ const Project = () => {
     const [generateReview,setGenerateReview] = useState(false);
     const [review,setReview] = useState(null);
 
-    const notify = (data) => toast(data);
 
     useEffect(function(){
-        const socket = socketConnection(projectId)
-        socket.on("receiveMessage", function(msg){
-            setAllMessages(prev => [...prev,msg])
+        const tempSocket = socketConnection(projectId)
+
+        tempSocket.emit("chat-room", {projectId})
+
+        tempSocket.on("receiveMessage", function({data}){
+            console.log(data);
+            setAllMessages(prev => [...prev,data])
         })
 
-        axios.get(`${BASE_URL}/v1/api/messages/get-all/${projectId}`,{
-            headers: {
-                Authorization: "bearer " + localStorage.getItem("token")
-            }
-        })
-        .then((res)=>{
-            console.log(res);
-            setAllMessages(res.data.data)
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
+        setSocket(tempSocket)
 
-    },[])
+    },[projectId])
 
     useEffect(function(){
         axios.get(`${BASE_URL}/v1/api/projects/getCode/${projectId}`,{
@@ -55,10 +47,23 @@ const Project = () => {
         })
     },[])
 
+    useEffect(function(){
+        axios.get(`${BASE_URL}/v1/api/messages/get-all/${projectId}`,{
+            headers: {
+                Authorization: "bearer " + localStorage.getItem("token")
+            }
+        })
+        .then((res)=>{
+            setAllMessages(res.data.data)
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },[allMessages])
+
 
     function handleSubmit(e){
         e.preventDefault();
-        const socket = socketConnection(projectId)
         socket.emit("message", currentMessage)
         setCurrentMessage("");
     }
@@ -72,7 +77,6 @@ const Project = () => {
             }
         })
         .then((res)=>{
-            notify("Code saved successfully!!!")
             console.log(res);
         })
         .catch((err)=>{
@@ -99,16 +103,29 @@ const Project = () => {
         })
     }
 
+    function handleDeleteMessage(id){
+        axios.delete(BASE_URL + `/v1/api/messages/delete/${id}`,{
+            headers: {Authorization: `bearer ${localStorage.getItem("token")}`}
+        })
+        .then((res)=>{
+            console.log(res.data.deletedMessage);
+            setAllMessages((prev)=> prev.filter((msg)=>  msg?._id !== res.data.deletedMessage._id))
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
+
   return (
     <main className='min-w-screen h-full '>
         <section className='w-full h-full flex gap-8 px-10 py-4'>
             <div className='basis-[25%] bg-gray-200 rounded-md relative '>
                 <div className='w-full max-h-[90%] overflow-y-scroll p-4'>
                     {
-                        allMessages.map((data)=>(
-                            <div className="chat chat-start">
-                                <div className="chat-header">{data.username || data.userId.username}</div>
-                                <div className="chat-bubble bg-white">{data.msg || data.text}</div>
+                        allMessages?.map((data)=>(
+                            <div className="chat chat-start" onDoubleClick={()=> handleDeleteMessage(data?._id)}>
+                                <div className="chat-header">{data?.userId.username}</div>
+                                <div className="chat-bubble bg-white">{data?.text}</div>
                             </div>
                         ))
                     }

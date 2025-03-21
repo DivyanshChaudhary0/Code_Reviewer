@@ -5,7 +5,7 @@ export const BASE_URL = location.hostname === "localhost" ? "http://localhost:40
 
 const socketConnection = (projectId) => {
     if(location.hostname === "localhost"){
-        return io("http://localhost:3000",{
+        return io("http://localhost:4000",{
             query: {
                 projectId,
                 token: localStorage.getItem("token"),
