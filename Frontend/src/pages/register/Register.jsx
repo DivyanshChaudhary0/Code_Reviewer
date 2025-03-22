@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { BASE_URL } from '../../utils/Socket';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register = () => {
 
@@ -19,12 +20,13 @@ const Register = () => {
         axios.post(BASE_URL + "/v1/api/users/register",{username,email,password})
         .then((res)=>{
             localStorage.setItem("token", res.data.token)
-            console.log(res);
-            navigate("/")
+            toast.success("OTP sent successfully! ✅");
+            navigate("/verify")
         })
         .catch((err)=>{
             setError(err.response.data.message)
-            console.log(err);
+            toast.error("Failed to send OTP ❌");
+            console.log(err);      
         })
     }
 

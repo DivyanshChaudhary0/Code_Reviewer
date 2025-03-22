@@ -41,7 +41,6 @@ const Home = () => {
         })
         .then((res)=>{
             getProjects();
-            console.log(res);
         })
         .catch((err)=>{
             setError(err.response.data.message)

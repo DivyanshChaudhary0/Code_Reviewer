@@ -24,7 +24,6 @@ const Project = () => {
         tempSocket.emit("chat-room", {projectId})
 
         tempSocket.on("receiveMessage", function({data}){
-            console.log(data);
             setAllMessages(prev => [...prev,data])
         })
 
@@ -123,8 +122,8 @@ const Project = () => {
                 <div className='w-full max-h-[90%] overflow-y-scroll p-4'>
                     {
                         allMessages?.map((data)=>(
-                            <div className="chat chat-start" onDoubleClick={()=> handleDeleteMessage(data?._id)}>
-                                <div className="chat-header">{data?.userId.username}</div>
+                            <div key={data._id} className="chat chat-start" onDoubleClick={()=> handleDeleteMessage(data?._id)}>
+                                <div className="chat-header">{data?.userId?.username}</div>
                                 <div className="chat-bubble bg-white">{data?.text}</div>
                             </div>
                         ))

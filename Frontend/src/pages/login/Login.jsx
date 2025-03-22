@@ -48,7 +48,10 @@ const Login = () => {
                     onChange={(e)=> setPassword(e.target.value)} 
                     required
                 />
-                <Link to="/register" className='font-semibold'>New User? <span className='text-blue-600'>Sign In</span></Link >
+                <div className='flex items-center justify-between'>
+                    <Link to="/register" className='font-semibold'>New User? <span className='text-blue-600'>Sign In</span></Link >
+                    <Link to="/forgot-password" className='font-semibold text-blue-600'>Forgot Password</Link>
+                </div>
                 <button className='px-4 py-2 bg-blue-500 rounded-md text-white'>Login</button>
             </form>
             {error && <div className='font-semibold text-red-600 mt-4'>{error}</div> }
