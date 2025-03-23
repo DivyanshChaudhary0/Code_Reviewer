@@ -5,12 +5,14 @@ import { BASE_URL } from '../../utils/Socket';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Loading from '../../components/Loading';
 
 
 const Verification = () => {
 
     const [otp,setOTP] = useState(["","","",""]);
     const navigate = useNavigate();
+    const [loading,setLoading] = useState(false);
 
     function handleChange(e,idx){
         let value = e.target.value;
@@ -42,22 +44,23 @@ const Verification = () => {
             navigate("/")
         })
         .catch((err)=> {
-            toast.error("User register failed ❌");
+            toast.error(err?.response?.data?.message);
             console.log(err);
         })
     }
 
     function resendOTP(){
+        setLoading(true);
         axios.post(BASE_URL + "/v1/api/users/resendOtp",{},{
             headers: {Authorization: `bearer ${localStorage.getItem("token")}`}
         })
         .then((res)=> {
+            setLoading(false);
             toast.success("OTP sent successfully! ✅");
-            console.log(res);
         })
         .catch((err)=> {
-            console.log(err);
-            toast.error("Failed to resend OTP ❌");
+            setLoading(false);
+            toast.error(err?.response?.data?.message);
         })
     }
 
@@ -86,7 +89,9 @@ const Verification = () => {
             </div>
             <div className='mt-6 flex gap-4'>
                 <button onClick={submitOTP} className='px-4 py-2 bg-blue-400 text-white font-semibold rounded cursor-pointer'>Submit</button>
-                <button onClick={resendOTP} className='px-4 py-2 bg-orange-600 text-white font-semibold rounded cursor-pointer'>Resend OTP</button>
+                <button onClick={resendOTP} className='px-4 py-2 bg-orange-600 text-white font-semibold rounded cursor-pointer'>
+                    { loading ? <Loading/> : "Resend OTP" }
+                </button>
             </div>
         </div>
 

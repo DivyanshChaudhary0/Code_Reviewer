@@ -4,12 +4,15 @@ import React, { useState } from 'react'
 import { BASE_URL } from '../../utils/Socket';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Loading from '../../components/Loading';
 
 const Register = () => {
 
     const [username,setUsername] = useState("");
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
+    const [loading,setLoading] = useState(false);
+    
 
     const [error,setError] = useState("")
     const navigate = useNavigate();
@@ -17,15 +20,18 @@ const Register = () => {
     function handleSubmit(e){
         e.preventDefault();
 
+        setLoading(true)
         axios.post(BASE_URL + "/v1/api/users/register",{username,email,password})
         .then((res)=>{
             localStorage.setItem("token", res.data.token)
             toast.success("OTP sent successfully! ✅");
+            setLoading(false);
             navigate("/verify")
         })
         .catch((err)=>{
             setError(err.response.data.message)
-            toast.error("Failed to send OTP ❌");
+            toast.error(err.response.data.message);
+            setLoading(false);
             console.log(err);      
         })
     }
@@ -61,7 +67,9 @@ const Register = () => {
                     required
                 />
                 <Link to="/login" className='font-semibold'>Already have an account? <span className='text-blue-600'>Login</span></Link >
-                <button className='px-4 py-2 bg-blue-500 rounded-md text-white'>Register</button>
+                <button className='px-4 py-2 bg-blue-500 rounded-md text-white'>
+                    { loading ? <Loading/> : "Register"}
+                </button>
             </form>
             {error && <div className='font-semibold text-red-600 mt-4'>{error}</div> }
         </section>
