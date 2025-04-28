@@ -11,7 +11,7 @@ const getMessagesController = async function(req,res){
         })
     }
     catch(err){
-        resizeBy.status(400).json({
+        res.status(400).json({
             message: err.message
         })
     }

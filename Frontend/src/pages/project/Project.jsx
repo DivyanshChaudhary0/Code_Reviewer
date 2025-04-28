@@ -5,11 +5,12 @@ import socketConnection, { BASE_URL } from '../../utils/Socket';
 import axios from "axios"
 import EditablePrismEditor from '../../components/Prism';
 import ReactMarkdown from "react-markdown";
+import useSocketConnection from '../../utils/useSocketConnection';
+import useGetAllMessages from '../../utils/useGetAllMessages';
 
 const Project = () => {
 
     const {projectId} = useParams();
-    const [socket,setSocket] = useState(null);
     const [currentMessage,setCurrentMessage] = useState("");
     const [allMessages,setAllMessages] = useState([])
 
@@ -18,18 +19,7 @@ const Project = () => {
     const [review,setReview] = useState(null);
 
 
-    useEffect(function(){
-        const tempSocket = socketConnection(projectId)
-
-        tempSocket.emit("chat-room", {projectId})
-
-        tempSocket.on("receiveMessage", function({data}){
-            setAllMessages(prev => [...prev,data])
-        })
-
-        setSocket(tempSocket)
-
-    },[projectId])
+    const socket = useSocketConnection(projectId,setAllMessages);
 
     useEffect(function(){
         axios.get(`${BASE_URL}/v1/api/projects/getCode/${projectId}`,{
