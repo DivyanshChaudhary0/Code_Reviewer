@@ -12,6 +12,11 @@ const projectRoutes = require("./routes/project.routes")
 const userRoutes = require("./routes/user.routes")
 const messageRoutes = require("./routes/message.routes")
 
+app.get("/api/ping", (req, res) => {
+    console.log("Pinged at", new Date().toISOString());
+    res.status(200).send("pong");
+});
+
 app.use("/v1/api/projects", projectRoutes)
 app.use("/v1/api/users", userRoutes)
 app.use("/v1/api/messages", messageRoutes)
