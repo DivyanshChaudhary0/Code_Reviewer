@@ -1,7 +1,7 @@
 
 import { io } from "socket.io-client";
 
-export const BASE_URL = location.hostname === "localhost" ? "http://localhost:4000" : "https://code-reviewer-5fuv.onrender.com"
+export const BASE_URL = location.hostname === "localhost" ? "http://localhost:4000" : "https://code-reviewer-s8gs.onrender.com"
 
 const socketConnection = (projectId) => {
         return io(BASE_URL,{
